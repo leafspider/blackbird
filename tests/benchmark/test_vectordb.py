@@ -1,7 +1,7 @@
 import random, uuid, asyncio, pytest
 import psycopg2, psycopg2.extras
 from psycopg2.extensions import connection
-from raven.benchmark.vectordb import VectorDb
+from blackbird.benchmark.vectordb import VectorDb
 import os
 
 #pytest_plugins = ("pytest_asyncio",)
