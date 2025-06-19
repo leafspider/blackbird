@@ -1,0 +1,24 @@
+scikit-learn
+requests
+numpy
+selenium
+beautifulsoup4
+tabulate
+bs4
+
+# pandas
+# python-dotenv
+# pydantic
+# matplotlib
+# torch
+
+# Benchmark
+pinecone[asyncio]
+pinecone[grpc]
+docx
+pypdf
+faker
+langchain
+langchain_ollama
+transformers
+pytest-asyncio
