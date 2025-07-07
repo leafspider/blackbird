@@ -5,7 +5,7 @@ import random
 import os, json
 from faker import Faker
 
-from raven.generate.embedder import Embedder
+from blackbird.generate.embedder import Embedder
 import asyncio
 
 
@@ -41,7 +41,7 @@ class TweetGenerator:
         return txt[1:len(txt)-1]
     
     # Generate a tweet
-    def generate_json(s, topic, date=None):
+    async def generate_json(s, topic, date=None):
 
         # Default to the last week
         if date is None:
@@ -66,25 +66,28 @@ class TweetGenerator:
         #     "mentions": [f"@{s.fake.user_name()}" for _ in range(random.randint(0, 3))],
         # }
 
-        text = s.fake.text(max_nb_chars=280)        # Generate text using Faker
-        # text = s.generate_text(topic)             # Generate text using the LLM
+        # text = s.fake.text(max_nb_chars=280)        # Generate text using Faker
+        text = s.generate_text(topic)             # Generate text using the LLM
         
         tweet = {
             "id": s.fake.random_number(digits=19),
             "created_at": date.isoformat(),            
             "text": text,
-            "values": s.embed(text),
+            "values": await s.embed(text),
         }
         return tweet
 
-    def embed(s, text):
-        results = asyncio.run( s.embedder.create_embedding(text) )        # TODO May need to replace with sync version
-        return results
+    async def embed(s, text):
+        # results = asyncio.run( s.embedder.create_embedding(text) )        # TODO May need to replace with sync version
+        return await s.embedder.create_embedding(text)
 
     # Generate a list of tweets
-    def generate_dataset(s, topic, num_tweets):
-        dataset = [s.generate_json(topic) for _ in range(num_tweets)]
-        return dataset
+    async def generate_dataset(s, topic, num_tweets):
+        tasks = [s.generate_json(topic) for _ in range(num_tweets)]             # concurrent
+        return await asyncio.gather(*tasks)       
+         
+        # dataset = [await s.generate_json(topic) for _ in range(num_tweets)]   # sequential
+        # return dataset    
     
     # Save to file
     def save_tweets_to_file(s, dataset, topic):   
@@ -110,28 +113,7 @@ class TweetGenerator:
 
 if __name__ == "__main__":
 
-    num_tweets = 10
+    from tests.generate.test_generator import test_generator
 
-    topics = ["Artificial Intelligence"]
-    # topics = ["Space Exploration", "Climate Change"]
-    # topics = ["Sustainability", "Renewable Energy"]
-    # topics = ["Artificial Intelligence", "Robotics", "Space Exploration", "Climate Change", "Sustainability", "Renewable Energy"]
-    # topics = ["Nuclear Fusion", "Quantum Computing", "CRISPR Technology", "Electric Vehicles", "Blockchain Technology"]
-    # topics = ["CRISPR Technology", "Synthetic Biology"]
-    # topics = ["Artificial Intelligence", "Robotics", "Climate Change","Sustainability", "Renewable Energy", "Nuclear Fusion", 
-    #         "Quantum Computing", "Blockchain Technology", "Electric Vehicles", "Space Exploration", "CRISPR Technology", "Synthetic Biology"]
-    
-    gen = TweetGenerator()
-
-    for topic in topics:
-
-        dataset = gen.generate_dataset(topic, num_tweets)
-        gen.save_tweets_to_file(dataset, topic)
-
-        # print(type(dataset))
-        # for data in dataset:
-        #     print(type(data))
-        #     # obj = json.load(data)
-        #     # json.dump(obj, indent=2)
-        #     print(data)        
+    asyncio.run(test_generator())
 

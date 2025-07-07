@@ -47,7 +47,7 @@ def fetch_records(topics):
         tweets = gen.fetch(topic=topic)
         for tweet in tweets:
             record = {
-                "id": str( tweet['id'] ),
+                "id": int( tweet['id'] ),
                 "values": tweet['values'],    # embed(tweet['text']),
                 "metadata": {
                     "chunk_text": tweet['text'],
@@ -71,6 +71,6 @@ def generate_data(num_tweets):
             
 if __name__ == "__main__":
 
-    num_tweets = 200
+    num_tweets = 2
 
     generate_data(num_tweets)    

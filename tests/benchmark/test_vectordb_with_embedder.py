@@ -28,7 +28,7 @@ async def test_embedder_with_local_vector_db():
     db.connect()
     assert isinstance(db.conn, connection)
 
-    text1 = """Question from a trad beginner. What's the methodology for climbing trad routes that have no anchors in areas where slinging trees is prohibited. For example, the climbs Larry and Curly at Old Baldy. Are people building gear anchors at the top of the climb and then cleaning the route, disassembling the anchor, and walking off? If there are no features other than trees on the top of the cliff it seems like disassembling the anchor would be difficult and dangerous, and I cannot imagine doing this. Apologies if I am missing some obvious here."""
+    text1 = """Question from a trad climbing beginner. What's the methodology for climbing trad routes that have no anchors in areas where slinging trees is prohibited. For example, the climbs Larry and Curly at Old Baldy. Are people building gear anchors at the top of the climb and then cleaning the route, disassembling the anchor, and walking off? If there are no features other than trees on the top of the cliff it seems like disassembling the anchor would be difficult and dangerous, and I cannot imagine doing this. Apologies if I am missing some obvious here."""
     text2 = """Question from a sport beginner. What is the methodology for climbing sport routes that have no anchors in areas where slinging trees is prohibited. For example, the climbs Larry and Curly at Old Baldy. Are people building gear anchors at the top of the climb and then cleaning the route, disassembling the anchor, and walking off? If there are no features other than trees on the top of the pool it seems like eating the anchor would be difficult and dangerous, and I cannot imagine doing this. Apologies if I am an idiot."""
     text3 = """Question from a stock trader. Why are you so interested in horses? I find they cost a lot of money to maintain and are quite smelly. And they eat hay, which is rather delicious."""
 
@@ -132,21 +132,24 @@ async def test_benchmark_with_local_vector_db():
     assert isinstance(vector1, List)
     assert isinstance(vector1[0], float)
 
-    rows = db.search_by_embedding(vector1, num_results=5)
+    rows = db.search_by_embedding(vector1, top_k=5)
     assert len(rows) < 6
     for row in rows:
         assert isinstance(row[0], str)
-        assert isinstance(row[1], float)
+        assert isinstance(row[1], str)
+        assert isinstance(row[2], float)
 
     for row in rows:
         id = row[0]
         text = db.fetch_text(id)[:]
-        print('- ' + text)
+        print( str(row[2]), text )
 
     db.disconnect()
 
 
 if __name__ == '__main__':
 
-    asyncio.run(test_benchmark_with_local_vector_db())
+    asyncio.run(test_embedder_with_local_vector_db())
+    # asyncio.run(test_benchmark_with_local_vector_db())
+    
 

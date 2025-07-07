@@ -14,3 +14,7 @@ data/
 data/*
 data_test/
 data_test/*
+*/embedding
+*/embedding/*
+*/models
+*/models/*

@@ -1,14 +1,14 @@
 import pytest, asyncio
 
 from typing import List
-from raven.generate.generator import TweetGenerator
+from blackbird.generate.generator import TweetGenerator
 from datetime import datetime
 
 
 @pytest.mark.asyncio
 async def test_generator():
     
-    num_tweets = 2
+    num_tweets = 3
 
     topics = ["Synthetic Biology"]
     
@@ -19,11 +19,11 @@ async def test_generator():
         print(tweet)
 
     for topic in topics:
-        tweet = gen.generate_json(topic, date=datetime.now())
+        tweet = await gen.generate_json(topic, date=datetime.now())
         print(tweet['created_at'])
 
     for topic in topics:
-        dataset = gen.generate_dataset(topic, num_tweets)
+        dataset = await gen.generate_dataset(topic, num_tweets)
         # print(type(dataset))
         for data in dataset:
             print(type(data))

@@ -1,7 +1,7 @@
 import pytest, asyncio
 
 from typing import List
-from raven.generate.embedder import Embedder
+from blackbird.generate.embedder import Embedder
 
 
 @pytest.mark.asyncio
@@ -18,6 +18,7 @@ async def test_embedder():
     assert isinstance(results[0], float)
 
     print(results)
+    print(len(results))
 
 
 if __name__ == '__main__':

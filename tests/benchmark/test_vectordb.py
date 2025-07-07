@@ -159,10 +159,12 @@ async def test_insert():
     vector1 = [random.random() for _ in range(384)]
     doc_id = db.insert(
         table='blocks',
-        text='TROUT', 
+        text='TROUT5', 
         embedding=vector1
     )
     assert isinstance(doc_id , int )
+    print('doc_id', doc_id)
+
     db.disconnect()
 
 @pytest.mark.asyncio
@@ -173,7 +175,7 @@ async def test_upsert():
     assert isinstance(db.conn, connection)
     
     keys = ['id', 'text', 'embedding']
-    values=[(str(x), 'PERCH'+str(x), str([round(random.random(),5) for _ in range(384)])) for x in range(30)]
+    values=[(x, 'PERCH'+str(x), str([round(random.random(),5) for _ in range(384)])) for x in range(30)]
 
     ret = db.upsert(
         table='blocks',
@@ -181,6 +183,9 @@ async def test_upsert():
         values=values
     )
     assert ret == "INSERT 0 30"
+
+    ret = db.resequence('blocks', 'id', 'blocks_id_seq')  # So we can still insert
+    assert ret == "SELECT 1"
 
     db.disconnect()
 
@@ -191,7 +196,9 @@ if __name__ == '__main__':
     # asyncio.run(test_local_vector_db())
     # asyncio.run(test_create_embedding_index())
     # asyncio.run(test_create_vector_extension())
-    # asyncio.run(test_create_table())
+    asyncio.run(test_create_table())
     asyncio.run(test_upsert())
+    asyncio.run(test_insert())
     
 
+    

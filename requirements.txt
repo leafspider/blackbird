@@ -1,10 +1,10 @@
-scikit-learn
-requests
-numpy
-selenium
-beautifulsoup4
-tabulate
-bs4
+# scikit-learn
+# requests
+# numpy
+# selenium
+# beautifulsoup4
+# tabulate
+# bs4
 
 # pandas
 # python-dotenv
@@ -22,3 +22,4 @@ langchain
 langchain_ollama
 transformers
 pytest-asyncio
+psycopg2
