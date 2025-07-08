@@ -74,15 +74,15 @@ if __name__ == '__main__':
     hash = {}
 
     t0 = time.time()
-    # for namespace in namespaces:    
-    #     records = fetch_records(topics=namespace['topics'])
-    #     hash[namespace['name']] = records
-    # print("fetch", time.time() - t0)
+    for namespace in namespaces:    
+        records = fetch_records(topics=namespace['topics'])
+        hash[namespace['name']] = records
+    print("fetch", time.time() - t0)
 
     t0 = time.time()
-    # for namespace, records in hash.items():    
-    #     upsert(index_name, namespace, records)
-    # print("upsert", time.time() - t0)
+    for namespace, records in hash.items():    
+        upsert(index_name, namespace, records)
+    print("upsert", time.time() - t0)
     
     query_vector1 = embed("Which technology will have biggest possible societal impact in the near future?")
     query_vector2 = embed("Which technology will have biggest possible economic impact over the next few years?")

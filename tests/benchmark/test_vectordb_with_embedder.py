@@ -77,12 +77,13 @@ async def test_embedder_with_local_vector_db():
     assert isinstance(vector1, List)
     assert isinstance(vector1[0], float)
 
-    rows = db.search_by_embedding(vector1, num_results=3)
+    rows = db.search_by_embedding(vector1, top_k=3)
     assert len(rows) < 4
     for row in rows:
         # assert isinstance(row[0], uuid.UUID)
         assert isinstance(row[0], int)
-        assert isinstance(row[1], float)
+        assert isinstance(row[1], str)
+        assert isinstance(row[2], float)
 
     num_results = 100
     rows = db.search_by_id(doc_id1, num_results)
@@ -90,7 +91,8 @@ async def test_embedder_with_local_vector_db():
     for row in rows:
         # assert isinstance(row[0], uuid.UUID)
         assert isinstance(row[0], int)
-        assert isinstance(row[1], float)
+        assert isinstance(row[1], str)
+        assert isinstance(row[2], float)
 
     for row in rows:
         id = row[0]

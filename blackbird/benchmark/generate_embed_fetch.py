@@ -32,10 +32,10 @@ namespaces = [
     {"name": "entrepreneurship", "topics": ["Startup Culture", "Business Innovation"]},
 ]   
 
-def embed(text):
+async def embed(text):
 
     embedder = Embedder()
-    results = asyncio.run( embedder.create_embedding(text) )        # TODO May need to replace with sync version
+    results = await embedder.create_embedding(text)
     return results
 
 def fetch_records(topics):
@@ -48,7 +48,8 @@ def fetch_records(topics):
         for tweet in tweets:
             record = {
                 "id": int( tweet['id'] ),
-                "values": tweet['values'],    # embed(tweet['text']),
+                # "values": embed(tweet['text']),
+                "values": tweet['values'],
                 "metadata": {
                     "chunk_text": tweet['text'],
                     "category": topic, 
@@ -57,14 +58,14 @@ def fetch_records(topics):
             records.append(record)
     return records
 
-def generate_data(num_tweets):
+async def generate_data(num_tweets):
     
     gen = TweetGenerator()
 
     t0 = time.time()
     for namespace in namespaces:
         for topic in namespace['topics']:
-            dataset = gen.generate_dataset(topic, num_tweets)
+            dataset = await gen.generate_dataset(topic, num_tweets)
             gen.save_tweets_to_file(dataset, topic)
     print("generate", time.time() - t0)
 
@@ -73,4 +74,4 @@ if __name__ == "__main__":
 
     num_tweets = 2
 
-    generate_data(num_tweets)    
+    asyncio.run( generate_data(num_tweets) )

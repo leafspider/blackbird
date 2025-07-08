@@ -10,7 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
-psycopg2.extras.register_uuid()
+# psycopg2.extras.register_uuid()
 
 db_config = {
     "user": os.environ['POSTGRES_USER'],
@@ -88,12 +88,13 @@ async def test_local_vector_db():
 
     doc_id = db.insert(
         table='blocks',
-        block_type='doc',
-        parent_id=uuid.UUID('10004654-89ea-44f7-bf32-33ec02d233fa'),
+        # block_type='doc',
+        # parent_id=uuid.UUID('10004654-89ea-44f7-bf32-33ec02d233fa'),
         text='TROUT', 
         embedding=vector1
     )
-    assert isinstance(doc_id , uuid.UUID )
+    # assert isinstance(doc_id , uuid.UUID )
+    assert isinstance(doc_id , int )
 
     vector2 = [random.random() for _ in range(384)]
     vector2 = [round(x,5) for x in vector2]
@@ -101,15 +102,15 @@ async def test_local_vector_db():
     updated = db.update(doc_id, table='blocks', text="GREAT CONTENT")
     assert updated == "UPDATE 1"
 
-    fake_block_id = uuid.UUID('55004654-89ea-44f7-bf32-22ec02d233fa')
+    fake_block_id = 10930456    # uuid.UUID('55004654-89ea-44f7-bf32-22ec02d233fa')
     updated = db.update(fake_block_id, table='blocks', text="BOGUS CONTENT")
-    assert updated == "UPDATE 0"
+    assert updated == 'UPDATE 0'
 
     updated = db.update(
         doc_id,
         table='blocks',
-        block_type='doc',
-        parent_id=uuid.UUID('10004654-89ea-44f7-bf32-33ec02d233fa'),
+        # block_type='doc',
+        # parent_id=uuid.UUID('10004654-89ea-44f7-bf32-33ec02d233fa'),
         text='A TSUNAMI of fantastic content', 
         embedding=vector2
     )
@@ -118,16 +119,19 @@ async def test_local_vector_db():
     vector3 = db.fetch_embedding(doc_id)
     assert vector3 == vector2
 
-    rows = db.search_by_embedding(vector3, num_results=3)
+    rows = db.search_by_embedding(vector3, top_k=3)
     assert len(rows) < 4
     for row in rows:
-        assert isinstance(row[0], uuid.UUID)
-        assert isinstance(row[1], float)
+        # assert isinstance(row[0], uuid.UUID)
+        assert isinstance(row[0], int)
+        assert isinstance(row[1], str)
+        assert isinstance(row[2], float)
 
     rows = db.search_by_id(doc_id, num_results=4)
     assert len(rows) < 5
     for row in rows:
-        assert isinstance(row[0], uuid.UUID)
+        # assert isinstance(row[0], uuid.UUID)
+        assert isinstance(row[0], int)
         assert isinstance(row[1], float)
 
     data = {}
@@ -139,7 +143,6 @@ async def test_local_vector_db():
         #print(val)            
         data['id'] = val[0][1]
         data[db.text_column] = val[0][0]
-
     print(data)
     
     deleted = db.delete(doc_id)
