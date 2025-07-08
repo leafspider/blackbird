@@ -38,7 +38,7 @@ async def embed(text):
     results = await embedder.create_embedding(text)
     return results
 
-def fetch_records(topics):
+def fetch_records_local(topics):
 
     gen = TweetGenerator()
 
@@ -47,13 +47,29 @@ def fetch_records(topics):
         tweets = gen.fetch(topic=topic)
         for tweet in tweets:
             record = {
-                "id": int( tweet['id'] ),
+                "id": str( tweet['id'] ),
                 # "values": embed(tweet['text']),
                 "values": tweet['values'],
                 "metadata": {
                     "chunk_text": tweet['text'],
                     "category": topic, 
                 }
+            }
+            records.append(record)
+    return records
+
+def fetch_records_cloud(topics):
+
+    gen = TweetGenerator()
+
+    records = []
+    for topic in topics:
+        tweets = gen.fetch(topic=topic)
+        for tweet in tweets:
+            record = {
+                "_id": str( tweet['id'] ),
+                "chunk_text": tweet['text'],
+                "category": topic, 
             }
             records.append(record)
     return records

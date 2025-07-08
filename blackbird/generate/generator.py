@@ -113,7 +113,7 @@ class TweetGenerator:
 
 if __name__ == "__main__":
 
-    from tests.generate.test_generator import test_generator
+    from tests.generate.test_generator import test_generate_dataset
 
-    asyncio.run(test_generator())
+    asyncio.run(test_generate_dataset())
 

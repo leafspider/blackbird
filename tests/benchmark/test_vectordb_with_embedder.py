@@ -137,7 +137,7 @@ async def test_benchmark_with_local_vector_db():
     rows = db.search_by_embedding(vector1, top_k=5)
     assert len(rows) < 6
     for row in rows:
-        assert isinstance(row[0], str)
+        assert isinstance(row[0], int)
         assert isinstance(row[1], str)
         assert isinstance(row[2], float)
 

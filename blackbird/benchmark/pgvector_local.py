@@ -1,4 +1,4 @@
-import os, time, asyncio
+import os, time
 from blackbird.benchmark.vectordb import VectorDb
 from blackbird.benchmark.generate_embed_fetch import *
 
@@ -27,7 +27,7 @@ def upsert(namespace, records):
     )
     return ret
 
-def query(index_name, namespace, top_k, query_text=None, query_vector=None):
+def query(namespace, top_k, query_text=None, query_vector=None):
 
     if query_vector is None:
         query_vector = embed(query_text)
@@ -37,6 +37,7 @@ def query(index_name, namespace, top_k, query_text=None, query_vector=None):
 if __name__ == '__main__':
     
     db.create_vector_extension()
+
     for namespace in namespaces:  
         db.create_schema(namespace['name'])
         db.create_table(table=namespace['name']+'.blocks', vector_dimensions=vector_dimensions)
@@ -46,7 +47,7 @@ if __name__ == '__main__':
 
     t0 = time.time()
     for namespace in namespaces:    
-        records = fetch_records(topics=namespace['topics'])
+        records = fetch_records_local(topics=namespace['topics'])
         hash[namespace['name']] = records
     print("fetch", time.time() - t0)
 
@@ -60,8 +61,8 @@ if __name__ == '__main__':
 
     t0 = time.time()    
     for namespace in namespaces:
-        results = query(index_name, namespace=namespace['name'], top_k=1, query_vector=query_vector1)
-        results = query(index_name, namespace=namespace['name'], top_k=1, query_vector=query_vector2)
+        results = query(namespace=namespace['name'], top_k=1, query_vector=query_vector1)
+        results = query(namespace=namespace['name'], top_k=1, query_vector=query_vector2)
         # print(results)
     print("query", time.time() - t0)
 

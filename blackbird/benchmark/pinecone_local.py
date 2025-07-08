@@ -47,12 +47,12 @@ def upsert(index_name, namespace, records):
 
 def query(index_name, namespace, top_k, query_text=None, query_vector=None):
 
+    if query_vector is None:
+        query_vector = embed(query_text)
+
     index = get_index(index_name)
     # index.set_pool_threads(50)
     # index.set_connection_pool_maxsize(50)
-
-    if query_vector is None:
-        query_vector = embed(query_text)
 
     results = index.query(
         namespace=namespace,
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
     t0 = time.time()
     for namespace in namespaces:    
-        records = fetch_records(topics=namespace['topics'])
+        records = fetch_records_local(topics=namespace['topics'])
         hash[namespace['name']] = records
     print("fetch", time.time() - t0)
 
