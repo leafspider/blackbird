@@ -1,5 +1,4 @@
 import pytest
-from blackbird.benchmark.pinecone_local import *
 from blackbird.benchmark.pgvector_local import *
 from blackbird.benchmark.namespaces import namespaces_small, namespaces_large
 

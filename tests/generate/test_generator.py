@@ -3,8 +3,8 @@ import pytest, asyncio
 from typing import List
 from blackbird.generate.generator import TweetGenerator
 from datetime import datetime
-
 from blackbird.benchmark.namespaces import namespaces_small, namespaces_large
+
 
 def test_generate_text():
 
