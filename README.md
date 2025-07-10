@@ -55,6 +55,7 @@ docker-compose up
 ```py
 from blackbird.generate.generator import TweetGenerator
 
+
 num_tweets = 10
 
 namespaces = [
@@ -83,7 +84,6 @@ for namespace in namespaces:
 ```py
 from blackbird.benchmark.pgvector_local import *
 
-num_tweets = 10
 
 namespaces = [
     {"name": "robotics", "topics": ["Artificial Intelligence", "Robotics"]},
@@ -126,7 +126,6 @@ print("query", time.time() - t0)
 ```py
 from blackbird.benchmark.pinecone_local import *
 
-num_tweets = 10
 
 namespaces = [
     {"name": "robotics", "topics": ["Artificial Intelligence", "Robotics"]},
